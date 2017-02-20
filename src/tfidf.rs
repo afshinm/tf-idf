@@ -25,14 +25,14 @@ impl PartialEq for Tf {
 
 impl Tf {
     pub fn add(doc: String, raw_docs: Vec<String>) -> f32 {
-        let occurance: f32 = raw_docs.into_iter().filter(
+        let counts: f32 = raw_docs.into_iter().filter(
             |dx| dx.to_string() == doc.to_string()
         ).count() as f32;
 
-        return match occurance {
+        return match counts {
             0.0f32 => 0.0f32,
             _ => {
-                occurance.log10() + 1.0f32
+                counts.log10() + 1.0f32
             }
         };
     }
