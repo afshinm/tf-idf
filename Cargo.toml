@@ -1,0 +1,8 @@
+[package]
+name = "tfidf"
+version = "0.1.0"
+authors = ["Afshin Mehrabani <afshin.meh@gmail.com>"]
+description = "Tf-Idf"
+license = "MIT"
+
+[dependencies]
