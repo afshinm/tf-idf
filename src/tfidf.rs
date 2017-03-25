@@ -1,32 +1,42 @@
 /// Represents a document and its associated score
 #[derive(Debug)]
-pub struct Document {
+pub struct WeightedTerm {
     /// Document
-    pub doc: String,
+    pub value: String,
     /// Score of document
     pub score: f32
 }
 
-/// Represents TF struct, vector of Documents
+/// Represents a term
 #[derive(Debug)]
-pub struct Tf(pub Vec<Document>);
+pub struct Term(pub String);
 
-impl PartialEq for Document {
-    fn eq(&self, other: &Document) -> bool {
-        self.doc == other.doc && self.score == other.score
-    }
+/// Represents TF-IDF struct
+#[derive(Debug)]
+pub struct TfIdf {
+    pub documents: Vec<Vec<Term>>
 }
 
-impl PartialEq for Tf {
-    fn eq(&self, other: &Tf) -> bool {
+impl PartialEq for Term {
+    fn eq(&self, other: &Term) -> bool {
         self.0 == other.0
     }
 }
 
-impl Tf {
-    pub fn add(doc: String, raw_docs: Vec<String>) -> f32 {
-        let counts: f32 = raw_docs.into_iter().filter(
-            |dx| dx.to_string() == doc.to_string()
+impl TfIdf {
+    pub fn new() -> TfIdf {
+        TfIdf { documents: vec![] }
+    }
+
+    pub fn add(&mut self, document: Vec<Term>) {
+        self.documents.push(document);
+    }
+
+    pub fn tf(&self, term: &Term, document_index: usize) -> f32 {
+        let ref document: Vec<Term> = self.documents[document_index];
+
+        let counts: f32 = document.into_iter().filter(
+            |dx| dx.0 == term.0
         ).count() as f32;
 
         return match counts {
