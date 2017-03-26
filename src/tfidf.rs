@@ -1,39 +1,51 @@
 /// Represents a document and its associated score
 #[derive(Debug)]
-pub struct WeightedTerm {
+pub struct WeightedTerm<'a> {
     /// Document
-    pub value: String,
+    pub value: &'a str,
     /// Score of document
     pub score: f32
 }
 
 /// Represents a term
 #[derive(Debug)]
-pub struct Term(pub String);
+pub struct Term<'a>(pub &'a str);
 
 /// Represents TF-IDF struct
 #[derive(Debug)]
-pub struct TfIdf {
-    pub documents: Vec<Vec<Term>>
+pub struct TfIdf<'a> {
+    pub documents: Vec<Vec<Term<'a>>>
 }
 
-impl PartialEq for Term {
+impl<'a> PartialEq for Term<'a> {
     fn eq(&self, other: &Term) -> bool {
         self.0 == other.0
     }
 }
 
-impl TfIdf {
-    pub fn new() -> TfIdf {
+impl<'a> TfIdf<'a> {
+    pub fn new() -> TfIdf<'a> {
         TfIdf { documents: vec![] }
     }
 
-    pub fn add(&mut self, document: Vec<Term>) {
+    pub fn add_vec(&mut self, document: Vec<Term<'a>>) {
         self.documents.push(document);
     }
 
-    pub fn tf(&self, term: &Term, document_index: usize) -> f32 {
-        let ref document: Vec<Term> = self.documents[document_index];
+    pub fn add(&mut self, document: &'a str) {
+        let mut terms: Vec<Term<'a>> = vec![];
+
+        for word in document.split(' ') {
+            terms.push(Term(word));
+        }
+
+        self.add_vec(terms);
+    }
+
+    //pub fn idf(&self, term: &Term, )
+
+    pub fn tf(&self, term: &'a Term, document_index: usize) -> f32 {
+        let ref document: Vec<Term<'a>> = self.documents[document_index];
 
         let counts: f32 = document.into_iter().filter(
             |dx| dx.0 == term.0
