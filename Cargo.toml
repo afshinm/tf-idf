@@ -1,8 +1,11 @@
 [package]
 name = "tfidf"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Afshin Mehrabani <afshin.meh@gmail.com>"]
-description = "Tf-Idf"
+repository = "https://github.com/afshinm/tf-idf"
+homepage = "https://github.com/afshinm/tf-idf"
+documentation = "https://github.com/afshinm/tf-idf"
+description = """
+Tf-Idf
+"""
 license = "MIT"
-
-[dependencies]
