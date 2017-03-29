@@ -38,9 +38,9 @@ mod tests {
     fn test_idf() {
         let tfidf = setup();
 
-        assert_eq!(tfidf.idf(&Term("soft")), 0.17609125f32);
-        assert_eq!(tfidf.idf(&Term("hello")), 0.17609125f32);
-        assert_eq!(tfidf.idf(&Term("nothing")), 0.47712126f32);
+        assert_eq!(tfidf.idf(&Term("soft")), 0.47712126f32);
+        assert_eq!(tfidf.idf(&Term("hello")), 0.47712126f32);
+        assert_eq!(tfidf.idf(&Term("nothing")), 0f32);
     }
 
     #[test]
@@ -48,8 +48,8 @@ mod tests {
         let tfidf = setup();
 
         assert_eq!(tfidf.tfidf(&Term("soft"), 0), 0f32);
-        assert_eq!(tfidf.tfidf(&Term("soft"), 1), 0.17609125f32);
-        assert_eq!(tfidf.tfidf(&Term("hello"), 0), 0.26010814f32);
+        assert_eq!(tfidf.tfidf(&Term("soft"), 1), 0.47712126f32);
+        assert_eq!(tfidf.tfidf(&Term("hello"), 0), 0.704766f32);
         assert_eq!(tfidf.tfidf(&Term("nothing"), 1), 0f32);
     }
 }

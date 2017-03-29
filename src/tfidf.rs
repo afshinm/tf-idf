@@ -101,13 +101,18 @@ impl<'a> TfIdf<'a> {
     /// use tfidf::tfidf::Term;
     ///
     /// let mut tfidf = TfIdf::new();
+    /// tfidf.add("hello world");
+    ///
     /// tfidf.idf(&Term("hello"));
     /// ```
     pub fn idf(&self, term: &Term) -> f32 {
         let docs = &self.documents;
-        let _idf: f32 = docs.len() as f32 / (1f32 + self.count(term) as f32);
 
-        _idf.log10()
+        if self.count(term) > 0 {
+            (docs.len() as f32 / self.count(term) as f32).log10()
+        } else {
+            0f32
+        }
     }
 
     /// Returns the TF of a specific Term
@@ -120,6 +125,7 @@ impl<'a> TfIdf<'a> {
     ///
     /// let mut tfidf = TfIdf::new();
     /// tfidf.add("hello world");
+    ///
     /// tfidf.tf(&Term("hello"), 0);
     /// ```
     pub fn tf(&self, term: &'a Term, document_index: usize) -> f32 {
@@ -147,9 +153,34 @@ impl<'a> TfIdf<'a> {
     ///
     /// let mut tfidf = TfIdf::new();
     /// tfidf.add("hello world");
+    ///
     /// tfidf.tfidf(&Term("hello"), 0);
     /// ```
     pub fn tfidf(&self, term: &'a Term, document_index: usize) -> f32 {
-        &self.tf(term, document_index) * &self.idf(term)
+        self.tf(term, document_index) * self.idf(term)
+    }
+
+    /// Returns the similarities of a Term among all inserted documents
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use tfidf::tfidf::TfIdf;
+    /// use tfidf::tfidf::Term;
+    ///
+    /// let mut tfidf = TfIdf::new();
+    /// tfidf.add("China has a strong economy that is growing at a rapid pace. However politically it differs greatly from the US Economy.");
+    /// tfidf.add("At last, China seems serious about confronting an endemic problem: domestic violence and corruption.");
+    ///
+    /// tfidf.similarities(&Term("China"));
+    /// ```
+    pub fn similarities(&self, term: &'a Term) -> Vec<f32> {
+        let mut values: Vec<f32> = vec![];
+
+        for i in 0usize..self.documents.len() {
+            values.push(self.tfidf(term, i));
+        }
+
+        values
     }
 }
