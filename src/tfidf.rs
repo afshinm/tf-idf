@@ -8,9 +8,10 @@ pub struct TfIdf<'a> {
     pub documents: Vec<Vec<Term<'a>>>
 }
 
+/// To compare two Terms
 impl<'a> PartialEq for Term<'a> {
     fn eq(&self, other: &Term) -> bool {
-        self.0 == other.0
+        self.0.to_lowercase() == other.0.to_lowercase()
     }
 }
 
